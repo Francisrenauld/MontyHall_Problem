@@ -4,8 +4,74 @@ class Statistics {
         this.gamesWithSameDoorLost = [];
         this.gamesWithDoorChangeWon = [];
         this.gamesWithDoorChangeLost = [];
+
     }
 
+    calculStatsDoorChange(numberOfGame) {
+
+        let sum = 0;
+        let averageGameWin = 0
+
+        for (var i = 0; i < numberOfGame; i++) {
+
+            let game = new Game()
+
+            game.doOneGameNoChange()
+
+            if (game.isGameWonNotChange() == true) {
+                this.gamesWithSameDoorWon.push(game)
+
+            }
+            if (game.isGameWonNotChange() != true) {
+                this.gamesWithSameDoorLost.push(game)
+
+            }
+        }
+
+        for (var i = 0; i < this.gamesWithSameDoorWon.length; i++) {
+
+            sum += 1;
+        }
+
+        averageGameWin = sum / numberOfGame
+
+        averageGameWin = averageGameWin * 100
+
+        return Math.ceil(averageGameWin) + "%"
+    }
+
+    calculStatsDorrNotChange(numberOfGame) {
+
+        let sum = 0;
+        let averageGameWin = 0
+
+        for (var i = 0; i < numberOfGame; i++) {
+
+            let game = new Game()
+
+            game.doOneGameWithChange()
+
+            if (game.isGameWonChange() == true) {
+                this.gamesWithDoorChangeWon.push(game)
+
+            }
+            if (game.isGameWonChange() != true) {
+                this.gamesWithDoorChangeLost.push(game)
+
+            }
+        }
+
+        for (var i = 0; i < this.gamesWithDoorChangeWon.length; i++) {
+
+            sum += 1;
+        }
+
+        averageGameWin = sum / numberOfGame
+
+        averageGameWin = averageGameWin * 100
+
+        return Math.ceil(averageGameWin) + "%"
+    }
 }
 
 class Game {
@@ -22,30 +88,34 @@ class Game {
         this.finalPick;
         this.won;
 
+    }
+
+    doOneGameWithChange() {
+
         this.getRandomDoorCar()
         this.pickRandomDoor()
         this.openGoatDoor()
         this.stayOrSwitchWithSameDoor()
-        this.isGameWon()
+
+        return this.isGameWonChange()
+
     }
 
-    /*  doOneGame() {
+    doOneGameNoChange() {
 
-         this.getRandomDoorCar()
-         this.doorPicked = this.pickRandomDoor()
-         this.openGoatDoor()
-         this.finalPick = this.stayOrSwitchWithSameDoor()
-         return this.isGameWon()
+        this.getRandomDoorCar()
+        this.pickRandomDoor()
+        this.openGoatDoor()
 
+        return this.isGameWonNotChange()
 
-     } */
+    }
 
     getRandomDoorCar() {
 
         var rndInt1 = Math.floor(Math.random() * 3) + 1;
         this.doorCar = this.doors[rndInt1 - 1]
         this.doorCar.isCar = true;
-        return this.doorCar.number
 
     }
 
@@ -53,7 +123,7 @@ class Game {
 
         var rndInt2 = Math.floor(Math.random() * 3) + 1;
         this.doorPicked = this.doors[rndInt2 - 1]
-        return this.doorPicked.number
+
     }
 
     openGoatDoor() {
@@ -64,22 +134,17 @@ class Game {
 
                 this.doors[i - 1].opened = true;
                 this.openedGoatDoor = this.doors[i - 1]
-
-                return this.openedGoatDoor.number
             }
         }
     }
 
     stayOrSwitchWithSameDoor() {
 
-        var rndInt3 = Math.floor(Math.random() * 2) + 1;
-        var onlyTwoDoors = this.doors.filter(door => door.opened == false)
-        this.finalPick = onlyTwoDoors[rndInt3 - 1]
-        return this.finalPick.number
+        this.finalPick = this.doors.find(door => door.opened == false && door.number != this.doorPicked.number)
 
     }
 
-    isGameWon() {
+    isGameWonChange() {
 
         this.won = false;
 
@@ -87,60 +152,20 @@ class Game {
 
             this.won = true;
 
-            return this.won;
         }
-
+        return this.won;
     }
-
-    /* isGameWon() {
+    isGameWonNotChange() {
 
         this.won = false;
 
-        if (this.doors[0].finalPick == true && this.doors[0].isCar == true) {
+        if (this.doorPicked == this.doorCar) {
 
             this.won = true;
 
-            return this.won + ": Game won with door 1"
-
         }
-        if (this.doors[1].finalPick == true && this.doors[1].isCar == true) {
-
-            this.won = true;
-
-            return this.won + ": Game won with door 2"
-
-        }
-        if (this.doors[2].finalPick == true && this.doors[2].isCar == true) {
-
-            this.won = true;
-
-            return this.won + ": Game won with door 3"
-
-        }
-        if (this.doors[0].finalPick == true && this.doors[0].isCar == false) {
-
-            this.won;
-
-            return this.won + ": Game loose with door 1"
-
-        }
-        if (this.doors[1].finalPick == true && this.doors[1].isCar == false) {
-
-            this.won;
-
-            return this.won + ": Game loose with door 2"
-
-        }
-        if (this.doors[2].finalPick == true && this.doors[2].isCar == false) {
-
-            this.won;
-
-            return this.won + ": Game loose with door 3"
-
-        }
-
+        return this.won;
     }
- */
 }
 
 class Door {
@@ -151,15 +176,7 @@ class Door {
     }
 }
 
-//let stats = new Statistics()
+let stats = new Statistics()
 
-let game = new Game()
-
-
-console.log(game)
-//console.log(game.pickRandomDoor())
-//console.log(game.openGoatDoor())
-//console.log(game.stayOrSwitchWithSameDoor())
-//console.log(game.isGameWon())
-
-//console.log(stats.calculStats())
+console.log(stats.calculStatsDorrNotChange(10000))
+console.log(stats.calculStatsDoorChange(10000))
