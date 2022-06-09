@@ -6,22 +6,6 @@ class Statistics {
         this.gamesWithDoorChangeLost = [];
     }
 
-    /*   calculStats() {
-
-          for (var i = 0; i < 20; i++) {
-
-              let game = new Game()
-
-              game.doOneGame()
-
-              if (game.isGameWon() == true && game.doorPicked == game.finalPick) {
-                  this.gamesWithSameDoorWon.push(game)
-              }
-          }
-          return this.gamesWithSameDoorWon
-
-
-      } */
 }
 
 class Game {
@@ -42,6 +26,7 @@ class Game {
         this.pickRandomDoor()
         this.openGoatDoor()
         this.stayOrSwitchWithSameDoor()
+        this.isGameWon()
     }
 
     /*  doOneGame() {
@@ -68,43 +53,44 @@ class Game {
 
         var rndInt2 = Math.floor(Math.random() * 3) + 1;
         this.doorPicked = this.doors[rndInt2 - 1]
-        return this.doorPicked
+        return this.doorPicked.number
     }
 
     openGoatDoor() {
 
-
-        for (var i = 1; i < 4; i++) {
+        for (var i = 1; i <= this.doors.length; i++) {
 
             if (this.doors[i - 1] != this.doorPicked && this.doors[i - 1] != this.doorCar) {
 
                 this.doors[i - 1].opened = true;
-                this.doors[i - 1].openedGoatDoor = true;
+                this.openedGoatDoor = this.doors[i - 1]
 
-                return this.doors.number
+                return this.openedGoatDoor.number
             }
         }
     }
 
     stayOrSwitchWithSameDoor() {
 
-
-
-        for (let i = 0; i < 4; i++) {
-
-
-            if (this.doors[i - 1] != this.doors.opened && this.doors[i - 1] != this.doorCar) {
-
-                this.finalPick = this.doors[i - 1]
-
-                return this.finalPick.number
-
-            }
-
-        }
+        var rndInt3 = Math.floor(Math.random() * 2) + 1;
+        var onlyTwoDoors = this.doors.filter(door => door.opened == false)
+        this.finalPick = onlyTwoDoors[rndInt3 - 1]
+        return this.finalPick.number
 
     }
 
+    isGameWon() {
+
+        this.won = false;
+
+        if (this.finalPick == this.doorCar) {
+
+            this.won = true;
+
+            return this.won;
+        }
+
+    }
 
     /* isGameWon() {
 
@@ -170,9 +156,9 @@ class Door {
 let game = new Game()
 
 
-//console.log(game.stayOrSwitchWithSameDoor())
+console.log(game)
 //console.log(game.pickRandomDoor())
-console.log(game.openGoatDoor())
+//console.log(game.openGoatDoor())
 //console.log(game.stayOrSwitchWithSameDoor())
 //console.log(game.isGameWon())
 
