@@ -9,7 +9,6 @@ class Statistics {
 
     calculStatsDoorChange(numberOfGame) {
 
-        let sum = 0;
         let averageGameWin = 0
 
         for (var i = 0; i < numberOfGame; i++) {
@@ -19,30 +18,25 @@ class Statistics {
             game.doOneGameNoChange()
 
             if (game.isGameWonNotChange() == true) {
-                this.gamesWithSameDoorWon.push(game)
+                this.gamesWithSameDoorWon++
+
+            } else {
+
+                this.gamesWithSameDoorLost++
+
 
             }
-            if (game.isGameWonNotChange() != true) {
-                this.gamesWithSameDoorLost.push(game)
+            averageGameWin = this.gamesWithSameDoorWon / numberOfGame * 100
 
-            }
         }
-
-        for (var i = 0; i < this.gamesWithSameDoorWon.length; i++) {
-
-            sum += 1;
-        }
-
-        averageGameWin = sum / numberOfGame
-
-        averageGameWin = averageGameWin * 100
-
-        return Math.ceil(averageGameWin) + "%"
+        return averageGameWin.toFixed(1) + "% chance to win when NOT switching door"
     }
+
+
 
     calculStatsDorrNotChange(numberOfGame) {
 
-        let sum = 0;
+
         let averageGameWin = 0
 
         for (var i = 0; i < numberOfGame; i++) {
@@ -52,25 +46,20 @@ class Statistics {
             game.doOneGameWithChange()
 
             if (game.isGameWonChange() == true) {
-                this.gamesWithDoorChangeWon.push(game)
+
+                this.gamesWithDoorChangeWon++
+
+            } else {
+
+                this.gamesWithSameDoorLost++
 
             }
-            if (game.isGameWonChange() != true) {
-                this.gamesWithDoorChangeLost.push(game)
 
-            }
+            averageGameWin = this.gamesWithDoorChangeWon / numberOfGame * 100
+
         }
+        return averageGameWin.toFixed(1) + "% chance to win when switching door"
 
-        for (var i = 0; i < this.gamesWithDoorChangeWon.length; i++) {
-
-            sum += 1;
-        }
-
-        averageGameWin = sum / numberOfGame
-
-        averageGameWin = averageGameWin * 100
-
-        return Math.ceil(averageGameWin) + "%"
     }
 }
 
@@ -96,7 +85,6 @@ class Game {
         this.pickRandomDoor()
         this.openGoatDoor()
         this.stayOrSwitchWithSameDoor()
-
         return this.isGameWonChange()
 
     }
@@ -106,7 +94,6 @@ class Game {
         this.getRandomDoorCar()
         this.pickRandomDoor()
         this.openGoatDoor()
-
         return this.isGameWonNotChange()
 
     }
@@ -178,5 +165,5 @@ class Door {
 
 let stats = new Statistics()
 
-console.log(stats.calculStatsDorrNotChange(10000))
-console.log(stats.calculStatsDoorChange(10000))
+console.log(stats.calculStatsDorrNotChange(10000000))
+console.log(stats.calculStatsDoorChange(10000000))
