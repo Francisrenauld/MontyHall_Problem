@@ -9,6 +9,9 @@ class Statistics {
 
     calculStatsDoorChange(numberOfGame) {
 
+        var countLoss = 0
+        var countWin = 0
+
         let averageGameWin = 0
 
         for (var i = 0; i < numberOfGame; i++) {
@@ -18,15 +21,19 @@ class Statistics {
             game.doOneGameNoChange()
 
             if (game.isGameWonNotChange() == true) {
-                this.gamesWithSameDoorWon++
+
+                countWin++
+
+                this.gamesWithSameDoorWon.push(game)
 
             } else {
 
-                this.gamesWithSameDoorLost++
+                countLoss++
+                this.gamesWithSameDoorLost.push(game)
 
 
             }
-            averageGameWin = this.gamesWithSameDoorWon / numberOfGame * 100
+            averageGameWin = countWin / numberOfGame * 100
 
         }
         return averageGameWin.toFixed(1) + "% chance to win when NOT switching door"
@@ -34,8 +41,10 @@ class Statistics {
 
 
 
-    calculStatsDorrNotChange(numberOfGame) {
+    calculStatsDoorNotChange(numberOfGame) {
 
+        var countLoss = 0
+        var countWin = 0;
 
         let averageGameWin = 0
 
@@ -47,15 +56,18 @@ class Statistics {
 
             if (game.isGameWonChange() == true) {
 
-                this.gamesWithDoorChangeWon++
+                countWin++
+
+                this.gamesWithDoorChangeWon.push(game)
 
             } else {
 
-                this.gamesWithSameDoorLost++
+                countLoss++
+                this.gamesWithSameDoorLost.push(game)
 
             }
 
-            averageGameWin = this.gamesWithDoorChangeWon / numberOfGame * 100
+            averageGameWin = countWin / numberOfGame * 100
 
         }
         return averageGameWin.toFixed(1) + "% chance to win when switching door"
@@ -165,5 +177,5 @@ class Door {
 
 let stats = new Statistics()
 
-console.log(stats.calculStatsDorrNotChange(10000000))
-console.log(stats.calculStatsDoorChange(10000000))
+console.log(stats.calculStatsDoorNotChange(1000000))
+console.log(stats.calculStatsDoorChange(1000000))
