@@ -1,0 +1,174 @@
+DEFINE Door USING number AND isCar
+SEQUENCE CONSTRUCTOR
+SET THIS number TO number
+SET THIS isCar TO isCar
+SET THIS opened TO false
+ENDDEFINE
+
+DEFINE Game
+SEQUENCE CONSTRUCTOR
+SET THIS door1 TO NEW Door WITH 1 AND isCar TO false
+SET THIS door2 TO NEW Door WITH 2 AND isCar TO  false
+SET THIS door3 TO NEW Door WITH 3 AND isCar TO  false
+
+SET THIS doors TO  array door1, door2, door3
+SET THIS doorCar
+SET THIS doorPicked
+SET THIS openedGoatDoor
+SET THIS finalPick
+SET THIS WON
+ENDSEQUENCE 
+
+SEQUENCE METHODE
+
+SEQUENCE doOneGameWithChange
+
+call SEQUENCE getRandomDoorCar
+call SEQUENCE pickRandomDoor
+call SEQUENCE openGoatDoor
+call SEQUENCE stayOrSwitchWithSameDoor
+call  RETURN SEQUENCE isGameWonChange
+
+ENDSEQUENCE
+
+SEQUENCE doOneGameWithNoChange
+
+call SEQUENCE getRandomDoorCar
+call SEQUENCE pickRandomDoor
+call SEQUENCE openGoatDoor
+call  RETURN SEQUENCE isGameWonNotChange
+
+ENDSEQUENCE
+
+SEQUENCE getRandomDoorCar
+
+SET rndInt1 TO  a random number BETWEEN 1 AND 3
+SET doorCar TO doors array index rndInt1 - 1
+RETURN doorCar number 
+
+ENDSEQUENCE
+
+SEQUENCE pickRandomDoor
+
+SET rndInt2 TO  a random number BETWEEN 1 AND 3
+SET doorPicked TO doors array index rndInt2 - 1
+
+RETURN doorPicked number
+ENDSEQUENCE
+
+SEQUENCE openGoatDoor
+
+FOR i TO doors.length 
+ 
+    IF doors array index -1 IS NOT TO doorPicked && doors array index - 1 IS NOT TO doorCar THEN
+
+        doors array index - 1.opened TO TRUE
+        openedGoatDoor TO  doorsarray index - 1
+ENDFOR 
+    RETURN openedGoatDoor number
+
+ENDSEQUENCE
+
+SEQUENCE stayOrSwitchWithSameDoor
+
+SET rndInt3 TO  a random number BETWEEN 1 AND 3
+SET onlyTwoDoors TO filter doors array WITH only door.opened TO false
+SET finalPick TO onlyTwoDoors array index rndInt3 - 1
+
+RETURN finalPick number
+
+ENDSEQUENCE
+
+SEQUENCE isGameWonChange
+
+SET won TO false
+
+IF finalPick IS EQUAL TO doorCar THEN
+    
+    SET won TO TRUE
+
+RETURN won
+
+ENDSEQUENCE
+
+SEQUENCE isGameWonNotChange
+
+SET won TO false
+
+IF doorPicked IS EQUAL TO doorCar THEN
+    
+    SET won TO TRUE
+
+RETURN won
+
+ENDSEQUENCE
+
+ENDSEQUENCE
+
+ENDDEFINE
+
+DEFINE Statistics 
+//CONSTRUCTOR
+SET THIS gamesWithSameDoorWon TO array
+SET THIS gamesWithSameDoorLost TO array
+SET THIS gamesWithDoorChangeWon TO array
+SET THIS gamesWithDoorChangeLost TO array
+//METHODE
+
+SEQUENCE calculStatsDoorChange WITH numberOfGame
+
+set countWin TO 0
+SET countLoss TO 0
+
+SET averageGamWin TO 0
+
+FOR I TO numberOfGame 
+
+SET game TO NEW Game
+
+CALL game doOneGameWithNoChange
+
+IF isGameWonNotChange IS SAME TO TRUE
+
+countWin + 1 every time
+
+SET gamesWithSameDoorWon gamesWithSameDoorLost push in all the game
+
+ELSE 
+
+countLoss +1 every time
+gamesWithSameDoorLost gamesWithSameDoorLost push in all the game
+
+SET averageGameWin TO countWin / numberOfGame * 100 
+
+ENDFOR
+
+RETURN averageGameWin
+
+SEQUENCE calculStatsDorrNotChange WITH numberOfGame
+
+SET averageGamWin TO 0
+
+FOR I TO numberOfGame 
+
+SET game TO NEW Game
+
+CALL game doOneGameWithChange
+
+IF isGameWonChange IS SAME TO TRUE
+
+countWin + 1 every time
+SET gamesWithSameDoorWon gamesWithSameDoorLost push in all the game
+
+ELSE 
+
+countLoss +1 every time
+gamesWithSameDoorLost push in all the game
+
+SET averageGameWin TO countWin / numberOfGame * 100 
+
+ENDFOR
+
+RETURN averageGameWin
+
+ENDDEFINE
